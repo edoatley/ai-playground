@@ -1,0 +1,1 @@
+http -f POST http://localhost:8080/api/google-gemini/chat message="Tell me a joke"

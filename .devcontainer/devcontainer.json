@@ -6,14 +6,18 @@
             "VERSION": "17"
         },
 		"ghcr.io/eitsupi/devcontainer-features/jq-likes:2": {},
-		"ghcr.io/devcontainers-extra/features/gradle-sdkman:2": {}
+		"ghcr.io/devcontainers-extra/features/gradle-sdkman:2": {},
+		"ghcr.io/dhoeric/features/google-cloud-cli:1": {}
 	},
 	"customizations": {
         "vscode": {
 			"extensions": [
 				"vscjava.vscode-java-pack",
-				"vmware.vscode-boot-dev-pack"
+				"vmware.vscode-boot-dev-pack",
+				"googlecloudtools.cloudcode",
+				"wk-j.vscode-httpie"
 			]
 		}
-	}
+	},
+	"postCreateCommand": "sudo apt-get update && sudo apt-get install -y httpie" // Ensure httpie is installed
 }
