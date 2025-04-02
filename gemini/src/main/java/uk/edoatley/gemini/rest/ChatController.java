@@ -1,21 +1,24 @@
-package uk.edoatley.gemini;
+package uk.edoatley.gemini.rest;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import uk.edoatley.gemini.rest.model.ChatResponse;
+import uk.edoatley.gemini.service.SimpleChatService;
+
 @RestController
-@RequestMapping("/api/google-gemini")
-public class GoogleGeminiChatController {
+@RequestMapping("/api/chat")
+public class ChatController {
 
     private final SimpleChatService simpleChatService;
 
-    public GoogleGeminiChatController(SimpleChatService simpleChatService) {
+    public ChatController(SimpleChatService simpleChatService) {
         this.simpleChatService = simpleChatService;
     }
 
-    @PostMapping("/chat")
+    @PostMapping
     public ChatResponse chat(@RequestBody String message) {
         return new ChatResponse(this.simpleChatService.chat(message));
     }

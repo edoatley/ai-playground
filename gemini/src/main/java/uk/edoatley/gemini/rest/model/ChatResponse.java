@@ -1,4 +1,4 @@
-package uk.edoatley.gemini;
+package uk.edoatley.gemini.rest.model;
 
 public record ChatResponse(String message) {
 
