@@ -15,9 +15,12 @@
 				"vscjava.vscode-java-pack",
 				"vmware.vscode-boot-dev-pack",
 				"googlecloudtools.cloudcode",
-				"wk-j.vscode-httpie"
+				"wk-j.vscode-httpie",
+				"mhutchie.git-graph",
+				"donjayamanne.githistory"
 			]
 		}
 	},
-	"postCreateCommand": "sudo apt-get update && sudo apt-get install -y httpie" // Ensure httpie is installed
+    "postCreateCommand": "bash /workspaces/ai-playground/.devcontainer/setup.sh",
+    "initializeCommand": "bash /workspaces/ai-playground/.devcontainer/setup.sh"
 }
