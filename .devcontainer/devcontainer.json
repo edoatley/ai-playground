@@ -21,6 +21,6 @@
 			]
 		}
 	},
-    "postCreateCommand": "bash /workspaces/ai-playground/.devcontainer/setup.sh",
-	"initializeCommand": "bash /workspaces/ai-playground/.devcontainer/setup.sh"
+    "postCreateCommand": "bash ${containerWorkspaceFolder}/.devcontainer/setup.sh",
+	"remoteUser": "vscode"
 }
