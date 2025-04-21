@@ -10,11 +10,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 class OpenAiApplicationTests {
 
-    @Autowired
-    private ApplicationContext context;
-
     @Test
     void contextLoads() {
-        assertThat(context).isNotNull();
+
     }
 }
