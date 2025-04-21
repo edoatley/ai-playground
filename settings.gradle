@@ -1,3 +1,4 @@
-rootProject.name = 'gs-multi-module'
+rootProject.name = 'ai-playground'
 
 include 'gemini'
+include 'openai'

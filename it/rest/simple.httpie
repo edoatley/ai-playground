@@ -1,0 +1,1 @@
+http -f POST http://localhost:8081/api/chat message="Tell me a joke"

@@ -1,4 +1,4 @@
-package uk.edoatley.gemini.rest;
+package uk.edoatley.openai.rest;
 
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import uk.edoatley.gemini.rest.model.SummaryResponse;
-import uk.edoatley.gemini.service.SummarizationService;
+import uk.edoatley.openai.rest.model.SummaryResponse;
+import uk.edoatley.openai.service.SummarizationService;
 
 import java.io.IOException;
 

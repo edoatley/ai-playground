@@ -8,9 +8,14 @@ This repository is a playground repo to explore various API technologies
 
 ## Ideas
 
-- [ ] Basic Chat
-- [ ] Upgrade to Java 21
-- [ ] Look at Document summarization in Gemini
+- [x] Basic Chat
+- [x] Upgrade to Java 21
+- [x] Look at Document summarization in Gemini
+- [ ] Repeat the Gemini capability in OpenAI
+- [ ] Refactor to remove code duplication
+- [ ] Add thorough unit tests
+- [ ] Add an integration test suite that compares the output of the n models 
 - [ ] Add another AI model
+- [ ] Add another capability
 - [ ] [Look at Kubeflow](kubeflow/Gemini-Suggestion.MD)
 - [ ] [Look at agentic AI](agentic/Gemini-Suggestion.MD)

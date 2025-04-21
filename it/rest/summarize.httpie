@@ -1,2 +1,2 @@
-http -f POST http://localhost:8080/api/summarize 
+http -f POST http://localhost:8081/api/summarize
 file@/workspaces/ai-playground/gemini/src/test/resources/FDBP.pdf
