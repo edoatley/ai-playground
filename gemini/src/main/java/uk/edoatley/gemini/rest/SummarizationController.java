@@ -1,5 +1,7 @@
 package uk.edoatley.gemini.rest;
 
+import org.apache.pdfbox.Loader;
+import org.apache.pdfbox.io.NonSeekableRandomAccessReadInputStream;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.springframework.http.MediaType;
@@ -63,7 +65,9 @@ public class SummarizationController {
     }
 
     private String extractTextFromPdf(MultipartFile file) throws IOException {
-        try (PDDocument pdfDocument = PDDocument.load(file.getInputStream())) {
+        // First load the file bytes into memory to make it seekable
+        byte[] pdfBytes = file.getBytes();
+        try (PDDocument pdfDocument = Loader.loadPDF(pdfBytes)) {
             if (pdfDocument.isEncrypted()) {
                 throw new IllegalArgumentException("Encrypted PDFs are not supported");
             }
