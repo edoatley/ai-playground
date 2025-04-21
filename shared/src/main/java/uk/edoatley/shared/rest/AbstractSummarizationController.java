@@ -1,4 +1,4 @@
-package uk.edoatley.openai.rest;
+package uk.edoatley.shared.rest;
 
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -6,35 +6,26 @@ import org.apache.pdfbox.text.PDFTextStripper;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import uk.edoatley.openai.rest.model.SummaryResponse;
-import uk.edoatley.openai.service.SummarizationService;
+import uk.edoatley.shared.model.SummaryResponse;
+import uk.edoatley.shared.service.SummarizationService;
 
 import java.io.IOException;
 
-@RestController
 @RequestMapping("/api/summarize")
-public class SummarizationController {
+public abstract class AbstractSummarizationController {
     
     private static final long MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
     private static final String PDF_MIME_TYPE = "application/pdf";
     private static final String TEXT_MIME_TYPE = "text/plain";
+    private static final String PDF_CONTENT_TYPE = "application/pdf";
 
-    private final SummarizationService summarizationService;
+    protected final SummarizationService summarizationService;
 
-    public SummarizationController(SummarizationService summarizationService) {
+    protected AbstractSummarizationController(SummarizationService summarizationService) {
         this.summarizationService = summarizationService;
     }
 
-    /**
-     * This endpoint allows a user to upload a file (text or PDF) and get a summary of its content.
-     * The file is sent as a multipart/form/data request, and the response will contain the summary.
-     *
-     * @param file The uploaded file (text or PDF).
-     * @return A summary of the file content.
-     * @throws IOException If an error occurs while reading the file.
-     */
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public SummaryResponse summarize(MultipartFile file) throws IOException {
         validateFile(file);
@@ -43,28 +34,27 @@ public class SummarizationController {
         return new SummaryResponse(summary);
     }
 
-    private void validateFile(MultipartFile file) {
+    protected void validateFile(MultipartFile file) {
         if (file == null || file.isEmpty()) {
-            throw new IllegalArgumentException("File cannot be empty");
+            throw new IllegalArgumentException("Empty file");
         }
         if (file.getSize() > MAX_FILE_SIZE) {
             throw new IllegalArgumentException("File size exceeds maximum limit of 10MB");
         }
         String contentType = file.getContentType();
-        if (!PDF_MIME_TYPE.equals(contentType) && !TEXT_MIME_TYPE.equals(contentType)) {
-            throw new IllegalArgumentException("Only PDF and text files are supported");
+        if (!PDF_MIME_TYPE.equals(contentType)) {
+            throw new IllegalArgumentException("Only PDF files are supported");
         }
     }
 
-    private String extractContentFromFile(MultipartFile file) throws IOException {
+    protected String extractContentFromFile(MultipartFile file) throws IOException {
         if (PDF_MIME_TYPE.equals(file.getContentType())) {
             return extractTextFromPdf(file);
         }
         return new String(file.getBytes());
     }
 
-    private String extractTextFromPdf(MultipartFile file) throws IOException {
-        // First load the file bytes into memory to make it seekable
+    protected String extractTextFromPdf(MultipartFile file) throws IOException {
         byte[] pdfBytes = file.getBytes();
         try (PDDocument pdfDocument = Loader.loadPDF(pdfBytes)) {
             if (pdfDocument.isEncrypted()) {

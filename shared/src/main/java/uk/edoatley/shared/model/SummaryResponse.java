@@ -1,4 +1,4 @@
-package uk.edoatley.openai.rest.model;
+package uk.edoatley.shared.model;
 
 public record SummaryResponse(String summary) {
 }

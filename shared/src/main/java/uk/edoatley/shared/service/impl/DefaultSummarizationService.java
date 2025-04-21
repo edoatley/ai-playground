@@ -1,18 +1,27 @@
-package uk.edoatley.openai.service;
+package uk.edoatley.shared.service.impl;
 
 import org.springframework.ai.chat.client.ChatClient;
 
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.stereotype.Service;
 
-@Service
-public class SummarizationService {
+import uk.edoatley.shared.service.SummarizationService;
 
-    private static final Prompt SUMMARIZE_PROMPT = new Prompt("Summarize the following content in a concise manner, highlighting the key points and main ideas.");
+/**
+ * Default implementation of the SummarizationService interface.
+ * This service uses a ChatClient to summarize content.
+ */
+@Service
+public class DefaultSummarizationService implements SummarizationService {
+
+    private static final Prompt SUMMARIZE_PROMPT = new Prompt("""
+        Summarize the following content in a concise manner, highlighting the key points and main ideas.
+    """);
+
     private final ChatClient chatClient;
 
-    public SummarizationService(ChatClient.Builder chatClientBuilder) {
-        this.chatClient = chatClientBuilder.build();
+    public DefaultSummarizationService(ChatClient chatClient) {
+        this.chatClient = chatClient;
     }
 
     /**

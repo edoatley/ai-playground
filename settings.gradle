@@ -2,3 +2,4 @@ rootProject.name = 'ai-playground'
 
 include 'gemini'
 include 'openai'
+include 'shared'
