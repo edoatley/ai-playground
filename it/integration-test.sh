@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Array to store PIDs
+declare -A APP_PIDS
+
 # Function to wait for an application to be ready
 wait_for_app() {
     local port=$1
@@ -39,7 +42,9 @@ run_tests() {
 # Clean up function
 cleanup() {
     echo "Cleaning up..."
-    kill $GEMINI_PID $OPENAI_PID 2>/dev/null
+    for pid in "${APP_PIDS[@]}"; do
+        kill $pid 2>/dev/null
+    done
     exit
 }
 
@@ -52,30 +57,38 @@ mkdir -p /workspaces/ai-playground/build/test_results
 
 # Build the applications
 echo "Building applications..."
-cd .. && ./gradlew :gemini:build :openai:build
+cd .. && ./gradlew clean build
 
-# Start both applications in background
-echo "Starting Gemini application..."
-java -jar gemini/build/libs/gemini-0.0.1-SNAPSHOT.jar &
-GEMINI_PID=$!
+# Read configuration and start applications
+echo "Starting applications..."
+readarray -t MODELS < <(yq eval '.models[].name' it/config.yaml)
+readarray -t PORTS < <(yq eval '.models[].port' it/config.yaml)
+readarray -t JARS < <(yq eval '.models[].jarPath' it/config.yaml)
 
-echo "Starting OpenAI application..."
-java -jar openai/build/libs/openai-0.0.1-SNAPSHOT.jar &
-OPENAI_PID=$!
+for i in "${!MODELS[@]}"; do
+    echo "Starting ${MODELS[$i]} application..."
+    java -jar "${JARS[$i]}" &
+    APP_PIDS[${MODELS[$i]}]=$!
+    wait_for_app "${PORTS[$i]}"
+done
 
-# Wait for both applications to be ready
-wait_for_app 8080
-wait_for_app 8081
-
-# Run tests against both endpoints
-run_tests 8080 "gemini"
-run_tests 8081 "openai"
+# Run tests against all endpoints
+for i in "${!MODELS[@]}"; do
+    run_tests "${PORTS[$i]}" "${MODELS[$i]}"
+done
 
 # Compare results
 echo "Comparing results..."
 for test in chat_response summarize_response; do
     echo "Differences in $test:"
-    diff -y --suppress-common-lines /workspaces/ai-playground/build/test_results/gemini/${test}.json /workspaces/ai-playground/build/test_results/openai/${test}.json
+    # Compare first model with all others
+    for i in "${!MODELS[@]}"; do
+        if [ $i -eq 0 ]; then continue; fi
+        echo "Comparing ${MODELS[0]} with ${MODELS[$i]}:"
+        diff -y --suppress-common-lines \
+            "/workspaces/ai-playground/build/test_results/${MODELS[0]}/${test}.json" \
+            "/workspaces/ai-playground/build/test_results/${MODELS[$i]}/${test}.json"
+    done
 done
 
 echo "Test execution completed. Check /workspaces/ai-playground/build/test_results directory for full outputs."

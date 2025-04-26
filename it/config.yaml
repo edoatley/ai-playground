@@ -1,0 +1,7 @@
+models:
+  - name: gemini
+    port: 8080
+    jarPath: gemini/build/libs/gemini-0.0.1-SNAPSHOT.jar
+  - name: openai
+    port: 8081
+    jarPath: openai/build/libs/openai-0.0.1-SNAPSHOT.jar
